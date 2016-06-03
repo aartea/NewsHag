@@ -96,10 +96,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
 //        String query = getIntent().getStringExtra("userQuery");
         try {
-            URL url = new URL("http://api.nytimes.com/svc/news/v3/content/all/all/all.json?limit=20&api-key=46b73ba327704ff7994590206a6eed18");
+            URL url = new URL("http://api.nytimes.com/svc/news/v3/content/all/all/all" +
+                    ".json?limit=10&api-key=46b73ba327704ff7994590206a6eed18");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-            Log.d("TAG","started");
+            Log.d("TAG","onPerformSync; connection starting");
             InputStream inStream = connection.getInputStream();
             data = getInputData(inStream);
         } catch (Throwable e) {

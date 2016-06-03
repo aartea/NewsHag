@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -49,13 +50,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class NavD extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,NavDGrab.ApiResponseHandler {
 
 
     ArrayList<Article> mList;
     CustomAdapter adapter;
     ListView listView;
     LayoutInflater layoutInflater;
+
 
     // Constants
     // Content provider authority
@@ -79,6 +81,7 @@ public class NavD extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         checkFirstRun();
+        NOTIFICATIONBox();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -95,7 +98,7 @@ public class NavD extends AppCompatActivity
 
         mList = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listViewNavD);
-        final Cursor cursor = getContentResolver().query(AppContentProvider.CONTENT_URI,null,null,null,null);
+        final Cursor cursor = getContentResolver().query(AppContentProvider.CONTENT_URI, null, null, null, null);
         adapter = new CustomAdapter(this, cursor, 0);
         listView.setAdapter(adapter);
 
@@ -104,25 +107,25 @@ public class NavD extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Currently needs our attention; need to create intent
-                Intent myIntent = new Intent(NavD.this, Top10NewsD.class);
-//                cursor.moveToPosition(position);
-//
-//                myIntent.putExtra("title", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-//                        .COL_TITLE)));
-//                myIntent.putExtra("abstract", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-//                        .COL_ABSTRACT)));
-//                myIntent.putExtra("thumbnail", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-//                        .COL_THUMBNAIL)));
-//                myIntent.putExtra("url", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-//                        .COL_URL)));
-//                startActivity(myIntent);
+                Intent myIntent = new Intent(NavD.this, NavDDetailView.class);
+                cursor.moveToPosition(position);
+
+                myIntent.putExtra("title", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_TITLE)));
+                myIntent.putExtra("abstract", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_ABSTRACT)));
+                myIntent.putExtra("thumbnail", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_THUMBNAIL)));
+                myIntent.putExtra("url", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_URL)));
+                startActivity(myIntent);
             }
         });
 
 
         //Step 1 (for content resolver)
         //new Handler
-        getContentResolver().registerContentObserver(AppContentProvider.CONTENT_URI,true, new
+        getContentResolver().registerContentObserver(AppContentProvider.CONTENT_URI, true, new
                 NewsContentObserver
                 (new Handler()));
 
@@ -151,6 +154,7 @@ public class NavD extends AppCompatActivity
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
             return LayoutInflater.from(context).inflate(R.layout.list_items, parent, false);
         }
+
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
 
@@ -168,11 +172,13 @@ public class NavD extends AppCompatActivity
 
             // Populate fields with extracted properties
             abstract1.setText(abstractString);
-            if (imageString != null && ! imageString.equals("")){ Picasso.with(NavD.this)
-                    .load
-                            (imageString).into
-                            (image);
-                title.setText(titleString);}
+            if (imageString != null && !imageString.equals("")) {
+                Picasso.with(NavD.this)
+                        .load
+                                (imageString).into
+                        (image);
+                title.setText(titleString);
+            }
         }
     }
 
@@ -207,13 +213,17 @@ public class NavD extends AppCompatActivity
 
     private void handleIntent(Intent intent) {
         //Implicit Intent needs to handle our query!
-        Intent sendQ = new Intent(NavD.this, SyncAdapter.class);
+        //Implicit Intent needs to handle our query!
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            sendQ.putExtra("userQuery",query);
-            sendQ.setType("text/plain");
-            startActivity(sendQ);
         }
+    }
+
+    //Method to use singleton, pass in string parameter to be handled by response
+    @Override
+    public void handleResponse(String query) {
+
+
     }
 
     @Override
@@ -265,6 +275,54 @@ public class NavD extends AppCompatActivity
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.send_intent_title)));
     }
 
+
+    public void NOTIFICATIONBox() {
+
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        //If there is internet connection then the user will be presented with a notification that displays the top story
+        if (networkInfo != null && networkInfo.isConnected()) {
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(6);
+
+
+        } else {
+            NoInternetDialogue();
+
+            Intent intent = new Intent(NavD.this, MainActivity.class);
+            Intent intent1 = new Intent(Settings.ACTION_WIFI_SETTINGS);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(NavD.this, (int) System.currentTimeMillis(), intent, 0);
+            PendingIntent pendingIntent1 = PendingIntent.getActivity(NavD.this, (int) System.currentTimeMillis(), intent1, 0);
+
+
+            NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(NavD.this);
+            mBuilder.setSmallIcon(android.R.drawable.stat_sys_warning);
+            mBuilder.setContentTitle("No internet connection!");
+            Notification notification = mBuilder.build();
+            long[] pattern = {500, 500, 500, 500, 500, 500, 500, 500, 500};
+            mBuilder.setSound(notification.sound = Uri.parse("android.resource://"
+                    + this.getPackageName() + "/" + R.raw.notif));
+            mBuilder.setVibrate(pattern);
+            mBuilder.setLights(Color.RED, 500, 500);
+            mBuilder.setStyle(new NotificationCompat.InboxStyle());
+            mBuilder.setContentText("To use the app, please enable WIFI, Thanks!");
+            mBuilder.setContentIntent(pendingIntent);
+            mBuilder.setPriority(Notification.PRIORITY_MAX);
+            mBuilder.setStyle(bigTextStyle);
+            mBuilder.addAction(android.R.drawable.ic_menu_info_details, "Connect WIFI", pendingIntent1);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(6, bigTextStyle.build());
+        }
+
+
+    }
+
+
     private void NOTIFICATIONisAllowed() {
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -303,6 +361,13 @@ public class NavD extends AppCompatActivity
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(NavD.this);
             mBuilder.setSmallIcon(android.R.drawable.stat_sys_warning);
             mBuilder.setContentTitle("No internet connection!");
+            Notification notification = mBuilder.build();
+            long[] pattern = {500, 500, 500, 500, 500, 500, 500, 500, 500};
+            mBuilder.setSound(notification.sound = Uri.parse("android.resource://"
+                    + this.getPackageName() + "/" + R.raw.notif));
+            mBuilder.setVibrate(pattern);
+            mBuilder.setLights(Color.RED, 500, 500);
+            mBuilder.setStyle(new NotificationCompat.InboxStyle());
             mBuilder.setContentText("To use the app, please enable WIFI, Thanks!");
             mBuilder.setContentIntent(pendingIntent);
             mBuilder.setPriority(Notification.PRIORITY_MAX);
@@ -333,9 +398,43 @@ public class NavD extends AppCompatActivity
         startActivity(intent);
     }
 
+    public void NoInternetDialogue() {
+        AlertDialog.Builder builder7 = new AlertDialog.Builder(this);
+        builder7.setIcon(R.mipmap.ic_news);
+        builder7.setMessage("No internet connection, please click below to enable connection!" + "\n" + "\n" + "-Sincerely, your developers");
+        builder7.setCancelable(true);
+
+        builder7.setPositiveButton(
+                "Go to connection settings",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        Intent intent1 = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                        startActivity(intent1);
+
+
+                        return;
+                    }
+                });
+
+        builder7.setNegativeButton(
+                "I'm alright",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(NavD.this, "Totally get it, you'll still be able to see saved stories!", Toast.LENGTH_LONG).show();
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder7.create();
+        alert11.show();
+
+    }
+
     //Dialogue stuff goes here.
     public void firstDialogue() {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setIcon(R.mipmap.ic_news);
         builder1.setMessage("To search for the latest news based on your favorite topic, click the magnifying glass in the top right-hand corner and enter your topic!");
         builder1.setCancelable(true);
 
@@ -356,6 +455,7 @@ public class NavD extends AppCompatActivity
 
     public void secondDialogue() {
         AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+        builder2.setIcon(R.mipmap.ic_news);
         builder2.setMessage("To view the Top 10 most popular stories, swipe from the left or click the 3 lines in the top-left");
         builder2.setCancelable(true);
 
@@ -375,6 +475,7 @@ public class NavD extends AppCompatActivity
 
     public void ThirdDialogue() {
         AlertDialog.Builder builder3 = new AlertDialog.Builder(this);
+        builder3.setIcon(R.mipmap.ic_news);
         builder3.setMessage("Would you like tips on how to use the app?");
         builder3.setCancelable(true);
 
@@ -406,6 +507,7 @@ public class NavD extends AppCompatActivity
     public void MainDialogue() {
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setIcon(R.mipmap.ic_news);
         builder1.setMessage("Would you like to recieve the latest news from News Hag?");
         builder1.setCancelable(true);
 

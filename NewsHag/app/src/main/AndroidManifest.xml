@@ -4,9 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -17,41 +17,40 @@
         android:logo="@drawable/newhag"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
-        <activity android:name=".MainActivity"
-            android:label="Daily Top News">
-        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="Daily Top News"></activity>
         <activity android:name=".Top10NewsD" />
         <activity android:name=".FavoritesD" />
         <activity android:name=".WebViewForFavorites" />
-        <activity android:name=".WebViewForTop10"></activity>
+        <activity android:name=".WebViewForTop10" />
 
-        <service
-            android:name="badassapps.aaron.newshag.PlaceholderAuthenticatorService">
+        <service android:name=".PlaceholderAuthenticatorService">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-
-        <service
-            android:name="badassapps.aaron.newshag.MySyncServices">
+        <service android:name=".MySyncServices">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+
         <provider
             android:name=".AppContentProvider"
             android:authorities="badassapps.aaron.newshag.AppContentProvider"
-            android:label="my provider"
             android:exported="false"
-            android:syncable="true"/>
+            android:label="my provider"
+            android:syncable="true" />
+
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -73,6 +72,8 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".NavDDetailView"></activity>
     </application>
+
 </manifest>

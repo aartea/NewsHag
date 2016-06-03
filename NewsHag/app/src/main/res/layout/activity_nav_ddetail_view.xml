@@ -7,12 +7,14 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="10dp"
-    tools:context="badassapps.aaron.newshag.Top10NewsD"
+    tools:context="badassapps.aaron.newshag.NavDDetailView"
+    android:id="@+id/relativebackground"
     android:background="#d4181f"
     android:shadowColor="#000000"
     android:shadowDx="1"
     android:shadowDy="1"
     android:shadowRadius="1.5">
+
 
     <TextView
         android:layout_width="250dp"
@@ -76,4 +78,5 @@
         android:shadowRadius="3.5"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

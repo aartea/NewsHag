@@ -5,7 +5,7 @@
         android:id="@+id/action_favorite"
         android:icon="@drawable/s6"
         android:onClick="clickingShare"
-        android:title="@string/action_favorite"
+        android:title="clickingSharedButton"
         app:showAsAction="ifRoom" />
 
 </menu>
