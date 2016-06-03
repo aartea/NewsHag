@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_top10"
             android:icon="@drawable/new2"
-            android:title="Top 10"
+            android:title="Daily Top News"
             android:onClick="clickingTopTen"/>
         <item
             android:id="@+id/nav_favorites"

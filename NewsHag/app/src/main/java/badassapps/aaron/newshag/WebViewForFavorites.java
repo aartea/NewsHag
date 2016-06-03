@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -25,6 +26,8 @@ public class WebViewForFavorites extends AppCompatActivity {
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().getTextZoom();
         webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().getLoadsImagesAutomatically();
+        webView.setInitialScale(170);
         webView.setWebViewClient(new WebViewClient() {
 
 
@@ -48,6 +51,15 @@ public class WebViewForFavorites extends AppCompatActivity {
     }
 
 
+    public void clickingplusFav(View view) {
+        webView.zoomIn();
+        Toast.makeText(WebViewForFavorites.this, "you clicked zoom in", Toast.LENGTH_SHORT).show();
+    }
+
+    public void clickingminusFav(View view) {
+        webView.zoomOut();
+        Toast.makeText(WebViewForFavorites.this, "you clicked zoom out", Toast.LENGTH_SHORT).show();
+    }
 }
 
 

@@ -4,8 +4,12 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
 
 public class WebViewForTop10 extends AppCompatActivity {
 
@@ -20,9 +24,13 @@ public class WebViewForTop10 extends AppCompatActivity {
 
         webView = (WebView) findViewById(R.id.loadStory);
         final ProgressDialog pd = ProgressDialog.show(this, "", "Loading...", true);
-        webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().getLoadsImagesAutomatically();
+        webView.setInitialScale(170);
+        webView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
         webView.setWebViewClient(new WebViewClient() {
+
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -42,4 +50,14 @@ public class WebViewForTop10 extends AppCompatActivity {
         webView.loadUrl(detailUrl);
 
     }
+
+//    public void clickingminus(View view) {
+//        webView.zoomOut();
+//        Toast.makeText(WebViewForTop10.this, "you clicked zoom out", Toast.LENGTH_SHORT).show();
+//
+//    }
+//
+//    public void clickingplus(View view) {
+//        Toast.makeText(WebViewForTop10.this, "you clicked zoom in", Toast.LENGTH_SHORT).show();
+//    }
 }

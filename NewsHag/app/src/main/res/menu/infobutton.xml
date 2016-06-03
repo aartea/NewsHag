@@ -4,7 +4,7 @@
         <item
             android:id="@+id/action_favorite"
             android:icon="@drawable/i"
-            android:title="@string/action_favorite"
+            android:title="clickingInfoButton"
             android:onClick="clickingInfo"
             app:showAsAction="ifRoom"/>
 
