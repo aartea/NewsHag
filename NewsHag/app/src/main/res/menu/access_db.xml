@@ -5,6 +5,6 @@
         android:id="@+id/action_favorite"
         android:icon="@drawable/f1"
         android:title="@string/action_favorite"
-        android:onClick="clickingToSeeFavs"
+        android:onClick="clickingFavs"
         app:showAsAction="ifRoom"/>
 </menu>
