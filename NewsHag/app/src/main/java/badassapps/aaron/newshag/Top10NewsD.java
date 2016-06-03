@@ -2,7 +2,9 @@ package badassapps.aaron.newshag;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +27,7 @@ public class Top10NewsD extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top10_news_d);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         String detailTitle = getIntent().getStringExtra("title");
         String detailAbstract = getIntent().getStringExtra("abstract");
@@ -57,6 +60,7 @@ public class Top10NewsD extends AppCompatActivity {
 
     public void clickingFavsToAdd(MenuItem item) {
 
+
         Toast.makeText(Top10NewsD.this, "Added the story to your favorites!", Toast.LENGTH_SHORT).show();
 
     }
@@ -75,6 +79,7 @@ public class Top10NewsD extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.shared_icon, menu);
         inflater.inflate(R.menu.making_fav, menu);
+
         return true;
     }
 

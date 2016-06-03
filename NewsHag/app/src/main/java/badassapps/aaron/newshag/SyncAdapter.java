@@ -83,11 +83,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         //Do api call to nytimes to get new data; gson stuff goes here...
         String data ="";
 
+        //Option A
         //Create history column (our URI)
         //Pass URI intent here....
-        String query = getIntent().getStringExtra("userQuery");
+
+        //Option B
+        //Create a class that will handle the logic to pass our url as a string
+        //This class will contain our intent and we can then do if/then operation
+
+        //Option C
+        //Neither of the above. syncadapter should be left alone.
+
+//        String query = getIntent().getStringExtra("userQuery");
         try {
-            URL url = new URL("http://api.nytimes.com/svc/news/v3/content/all/all/all.json?limit=20&api-key=d1934738c85789ae6e8dac61ddca1abc%3A12%3A74602111");
+            URL url = new URL("http://api.nytimes.com/svc/news/v3/content/all/all/all.json?limit=20&api-key=46b73ba327704ff7994590206a6eed18");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             Log.d("TAG","started");
