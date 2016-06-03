@@ -10,6 +10,8 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+
+import android.content.Intent;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 
@@ -79,6 +82,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
         //Do api call to nytimes to get new data; gson stuff goes here...
         String data ="";
+
+        //Create history column (our URI)
+        //Pass URI intent here....
+        String query = getIntent().getStringExtra("userQuery");
         try {
             URL url = new URL("http://api.nytimes.com/svc/news/v3/content/all/all/all.json?limit=20&api-key=d1934738c85789ae6e8dac61ddca1abc%3A12%3A74602111");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

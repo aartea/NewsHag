@@ -19,6 +19,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -131,21 +132,8 @@ public class NavD extends AppCompatActivity
                 ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        /*
-         * Request the sync for the default account, authority, and
-         * manual sync settings
-         */
 
-        //REQUESTS A SYNC FOR THE ACCOUNT
-        //i.e. if there's no cache, or app hasn't been used for several days...
-//        ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
-//
-//        ContentResolver.setSyncAutomatically(mAccount,AUTHORITY,true);
-//        ContentResolver.addPeriodicSync(
-//                mAccount,
-//                AUTHORITY,
-//                Bundle.EMPTY,
-//                60);
+        handleIntent(getIntent());
     }
 
     //CustomAdapter for our Cursor
@@ -205,11 +193,27 @@ public class NavD extends AppCompatActivity
         inflater.inflate(R.menu.search, menu);
         inflater.inflate(R.menu.infobutton, menu);
 
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        //Implicit Intent needs to handle our query!
+        Intent sendQ = new Intent(NavD.this, SyncAdapter.class);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            sendQ.putExtra("userQuery",query);
+            sendQ.setType("text/plain");
+            startActivity(sendQ);
+        }
     }
 
     @Override
