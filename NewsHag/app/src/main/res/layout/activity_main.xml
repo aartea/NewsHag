@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="badassapps.aaron.newshag.MainActivity"
-    android:background="#d4181f">
+    android:background="#12eb5c5b">
 
     <ListView
         android:layout_width="match_parent"
