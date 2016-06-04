@@ -93,35 +93,12 @@ public class NavD extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
-
+        listView = (ListView) findViewById(R.id.listViewNavD);
         mAccount = createSyncAccount(this);
 
         mList = new ArrayList<>();
-        listView = (ListView) findViewById(R.id.listViewNavD);
-        final Cursor cursor = getContentResolver().query(AppContentProvider.CONTENT_URI, null, null, null, null);
-        adapter = new CustomAdapter(this, cursor, 0);
-        listView.setAdapter(adapter);
 
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Currently needs our attention; need to create intent
-                Intent myIntent = new Intent(NavD.this, NavDDetailView.class);
-                cursor.moveToPosition(position);
-
-                myIntent.putExtra("title", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_TITLE)));
-                myIntent.putExtra("abstract", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_ABSTRACT)));
-                myIntent.putExtra("thumbnail", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_THUMBNAIL)));
-                myIntent.putExtra("url", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_URL)));
-                startActivity(myIntent);
-            }
-        });
-
+        handleIntent(getIntent());
 
         //Step 1 (for content resolver)
         //new Handler
@@ -135,8 +112,6 @@ public class NavD extends AppCompatActivity
                 ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-
-        handleIntent(getIntent());
     }
 
     //CustomAdapter for our Cursor
@@ -223,7 +198,28 @@ public class NavD extends AppCompatActivity
     @Override
     public void handleResponse(String query) {
 
+        final Cursor cursor = getContentResolver().query(AppContentProvider.CONTENT_URI, null, null, null, null);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Currently needs our attention; need to create intent
+                Intent myIntent = new Intent(NavD.this, NavDDetailView.class);
+                cursor.moveToPosition(position);
 
+                myIntent.putExtra("title", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_TITLE)));
+                myIntent.putExtra("abstract", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_ABSTRACT)));
+                myIntent.putExtra("thumbnail", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_THUMBNAIL)));
+                myIntent.putExtra("url", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_URL)));
+                startActivity(myIntent);
+            }
+        });
+
+        adapter = new CustomAdapter(this, cursor, 0);
+        listView.setAdapter(adapter);
     }
 
     @Override
