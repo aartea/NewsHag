@@ -252,7 +252,7 @@ public class NavD extends AppCompatActivity
         if (id == R.id.nav_top10) {
             // Handle the camera action
 
-        } else if (id == R.id.nav_books) {
+        } else if (id == R.id.nav_movies) {
 
         } else if (id == R.id.nav_biz) {
 

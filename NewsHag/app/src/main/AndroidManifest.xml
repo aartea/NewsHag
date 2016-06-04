@@ -73,13 +73,15 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
+
         <activity android:name=".NavDDetailView" />
         <activity android:name=".WebViewBiz" />
-        <activity android:name=".WebViewBooks" />
+        <activity android:name=".WebViewMovies" />
         <activity android:name=".BooksNewsDetail" />
         <activity android:name=".BizNewsDetail" />
         <activity android:name=".BizDetailedBrokenUp" />
-        <activity android:name=".BookDetailedBrokenUp"></activity>
+        <activity android:name=".MoviesDetailedBrokenUp"></activity>
+
     </application>
 
 </manifest>
