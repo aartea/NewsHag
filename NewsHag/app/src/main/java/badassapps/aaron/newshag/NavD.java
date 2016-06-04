@@ -151,6 +151,16 @@ public class NavD extends AppCompatActivity
 //                60);
     }
 
+    public void clickingBooks(MenuItem item) {
+        Intent intent = new Intent(NavD.this,BooksNewsDetail.class);
+        startActivity(intent);
+    }
+
+    public void clickingBiz(MenuItem item) {
+        Intent intent = new Intent(NavD.this, BizNewsDetail.class);
+        startActivity(intent);
+    }
+
     //CustomAdapter for our Cursor
     public class CustomAdapter extends CursorAdapter {
         private LayoutInflater cursorInflater;
@@ -208,13 +218,13 @@ public class NavD extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search, menu);
+//        inflater.inflate(R.menu.search, menu);
         inflater.inflate(R.menu.infobutton, menu);
 
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -241,6 +251,10 @@ public class NavD extends AppCompatActivity
 
         if (id == R.id.nav_top10) {
             // Handle the camera action
+
+        } else if (id == R.id.nav_books) {
+
+        } else if (id == R.id.nav_biz) {
 
         } else if (id == R.id.nav_favorites) {
 

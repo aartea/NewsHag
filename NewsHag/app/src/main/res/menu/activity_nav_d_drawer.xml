@@ -9,13 +9,13 @@
             android:onClick="clickingTopTen"/>
         <item
             android:id="@+id/nav_books"
-            android:icon="@drawable/new2"
+            android:icon="@drawable/books"
             android:title="Books"
             android:onClick="clickingBooks"/>
         <item
             android:id="@+id/nav_biz"
-            android:icon="@drawable/new2"
-            android:title="Buisness"
+            android:icon="@drawable/biz2"
+            android:title="Business"
             android:onClick="clickingBiz"/>
         <item
             android:id="@+id/nav_favorites"
