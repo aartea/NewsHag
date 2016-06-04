@@ -20,7 +20,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -50,7 +49,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class NavD extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,NavDGrab.ApiResponseHandler {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
     ArrayList<Article> mList;
@@ -93,12 +92,35 @@ public class NavD extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
-        listView = (ListView) findViewById(R.id.listViewNavD);
+
         mAccount = createSyncAccount(this);
 
         mList = new ArrayList<>();
+        listView = (ListView) findViewById(R.id.listViewNavD);
+        final Cursor cursor = getContentResolver().query(AppContentProvider.CONTENT_URI, null, null, null, null);
+        adapter = new CustomAdapter(this, cursor, 0);
+        listView.setAdapter(adapter);
 
-        handleIntent(getIntent());
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Currently needs our attention; need to create intent
+                Intent myIntent = new Intent(NavD.this, NavDDetailView.class);
+                cursor.moveToPosition(position);
+
+                myIntent.putExtra("title", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_TITLE)));
+                myIntent.putExtra("abstract", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_ABSTRACT)));
+                myIntent.putExtra("thumbnail", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_THUMBNAIL)));
+                myIntent.putExtra("url", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
+                        .COL_URL)));
+                startActivity(myIntent);
+            }
+        });
+
 
         //Step 1 (for content resolver)
         //new Handler
@@ -112,6 +134,21 @@ public class NavD extends AppCompatActivity
                 ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        /*
+         * Request the sync for the default account, authority, and
+         * manual sync settings
+         */
+
+        //REQUESTS A SYNC FOR THE ACCOUNT
+        //i.e. if there's no cache, or app hasn't been used for several days...
+//        ContentResolver.requestSync(mAccount, AUTHORITY, settingsBundle);
+//
+//        ContentResolver.setSyncAutomatically(mAccount,AUTHORITY,true);
+//        ContentResolver.addPeriodicSync(
+//                mAccount,
+//                AUTHORITY,
+//                Bundle.EMPTY,
+//                60);
     }
 
     //CustomAdapter for our Cursor
@@ -174,52 +211,11 @@ public class NavD extends AppCompatActivity
         inflater.inflate(R.menu.search, menu);
         inflater.inflate(R.menu.infobutton, menu);
 
+
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
         return true;
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        //Implicit Intent needs to handle our query!
-        //Implicit Intent needs to handle our query!
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-        }
-    }
-
-    //Method to use singleton, pass in string parameter to be handled by response
-    @Override
-    public void handleResponse(String query) {
-
-        final Cursor cursor = getContentResolver().query(AppContentProvider.CONTENT_URI, null, null, null, null);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Currently needs our attention; need to create intent
-                Intent myIntent = new Intent(NavD.this, NavDDetailView.class);
-                cursor.moveToPosition(position);
-
-                myIntent.putExtra("title", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_TITLE)));
-                myIntent.putExtra("abstract", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_ABSTRACT)));
-                myIntent.putExtra("thumbnail", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_THUMBNAIL)));
-                myIntent.putExtra("url", cursor.getString(cursor.getColumnIndex(NewsDBOpenHelper
-                        .COL_URL)));
-                startActivity(myIntent);
-            }
-        });
-
-        adapter = new CustomAdapter(this, cursor, 0);
-        listView.setAdapter(adapter);
     }
 
     @Override

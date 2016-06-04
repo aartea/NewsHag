@@ -8,6 +8,16 @@
             android:title="Daily Top News"
             android:onClick="clickingTopTen"/>
         <item
+            android:id="@+id/nav_books"
+            android:icon="@drawable/new2"
+            android:title="Books"
+            android:onClick="clickingBooks"/>
+        <item
+            android:id="@+id/nav_biz"
+            android:icon="@drawable/new2"
+            android:title="Buisness"
+            android:onClick="clickingBiz"/>
+        <item
             android:id="@+id/nav_favorites"
             android:icon="@drawable/f1"
             android:title="Favorites"

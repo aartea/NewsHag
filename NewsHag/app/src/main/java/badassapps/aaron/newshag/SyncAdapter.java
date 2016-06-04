@@ -10,8 +10,6 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-
-import android.content.Intent;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 
@@ -82,25 +79,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
         //Do api call to nytimes to get new data; gson stuff goes here...
         String data ="";
-
-        //Option A
-        //Create history column (our URI)
-        //Pass URI intent here....
-
-        //Option B
-        //Create a class that will handle the logic to pass our url as a string
-        //This class will contain our intent and we can then do if/then operation
-
-        //Option C
-        //Neither of the above. syncadapter should be left alone.
-
-//        String query = getIntent().getStringExtra("userQuery");
         try {
-            URL url = new URL("http://api.nytimes.com/svc/news/v3/content/all/all/all" +
-                    ".json?limit=10&api-key=46b73ba327704ff7994590206a6eed18");
+            URL url = new URL("http://api.nytimes.com/svc/news/v3/content/all/all/all.json?limit=20&api-key=46b73ba327704ff7994590206a6eed18");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-            Log.d("TAG","onPerformSync; connection starting");
+            Log.d("TAG","started");
             InputStream inStream = connection.getInputStream();
             data = getInputData(inStream);
         } catch (Throwable e) {
